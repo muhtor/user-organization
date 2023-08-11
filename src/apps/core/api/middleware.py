@@ -3,8 +3,8 @@ from .response import ResponseController
 from rest_framework import status
 
 
-class APIMiddleware(ResponseController):
-    """ Layer between view and response (Middleware) """
+class APILayer(ResponseController):
+    """ Layer between view and response """
 
     ASC = "id"
     DESC = "-id"

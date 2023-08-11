@@ -11,6 +11,9 @@ class Organization(TimestampedModel):
     def __str__(self):
         return f"{self.id}/{self.name}"
 
+    class Meta:
+        ordering = ['-id']
+
 
 class User(AbstractBaseUser, TimestampedModel):
     email = models.EmailField(max_length=120, unique=True, db_index=True)
@@ -28,6 +31,9 @@ class User(AbstractBaseUser, TimestampedModel):
     REQUIRED_FIELDS = []  # email and password required by default
 
     objects = UserManager()
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return f"{self.email}"

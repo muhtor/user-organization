@@ -1,4 +1,4 @@
-"""ERP URL Configuration
+"""Organization URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -46,8 +46,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),  # for browsable API - login and logout
 
-    path('api/v1/auth-token/create/', TokenObtainPairView.as_view(), name="tokencreate"),
-    path('api/v1/auth-token/refresh/', TokenRefreshView.as_view(), name="tokenrefresh"),
+    path('api/v1/auth-token/create/', TokenObtainPairView.as_view(), name="token_create"),
+    path('api/v1/auth-token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
 
     path('api/v1/accounts/', include('apps.accounts.api.v1.urls')),
     # path('api/v2/accounts/', include('apps.accounts.api.v2.urls')),

@@ -12,7 +12,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ("name", "description")
+        fields = ("id", "name", "description")
         extra_kwargs = {
             'name': {'required': True},
         }
@@ -54,6 +54,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class UserUpdateDestroySerializer(serializers.ModelSerializer):
+    organizations = serializers.PrimaryKeyRelatedField(many=True, queryset=Organization.objects.all())
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'phone', 'first_name', 'organizations', 'avatar')
+        extra_kwargs = {'organizations': {'required': False}}
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    organizations = OrganizationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'phone', 'first_name', 'organizations', 'avatar')
+
 
 
 

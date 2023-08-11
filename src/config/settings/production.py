@@ -1,19 +1,9 @@
 from .base import *
 from datetime import timedelta
 
-DEBUG = True
+DEBUG = False
 
-# INSTALLED_APPS += [
-    # third-parties
-# ]
-
-ALLOWED_HOSTS = [
-    'api.baraka.pixyz.uz',
-    'api.dev.baraka.pixyz.uz',
-    'localhost',
-]
-
-MIDDLEWARE += ['corsheaders.middleware.CorsMiddleware', ]
+ALLOWED_HOSTS = []
 
 
 REST_FRAMEWORK = {
@@ -40,18 +30,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_REPLACE_HTTPS_REFERER = False
-HOST_SCHEME = "https://"
-SECURE_PROXY_SSL_HEADER = None
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_SECONDS = None
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_FRAME_DENY = False
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),

@@ -8,7 +8,9 @@ app_name = "accounts"
 
 urlpatterns = [
     path("register/", views.RegisterView.as_view(), name="register"),
-    path("user/<int:user_id>/", views.UserUpdateDestroyView.as_view(), name="user"),
+    path("user/<int:id>/", views.UserDetailView.as_view(), name="user"),
+    path("user/all/", views.UserListView.as_view(), name="users"),
+    path("organization/all/", views.OrganizationListView.as_view(), name="organizations"),
 ]
 
 router.register(r'organization', views.OrganizationViewSet, basename='organization')

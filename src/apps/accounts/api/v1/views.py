@@ -1,13 +1,11 @@
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from apps.core.api.middleware import APIMiddleware
-from .serializers import RegisterSerializer, OrganizationSerializer
+from .serializers import RegisterSerializer, OrganizationSerializer, UserUpdateDestroySerializer, UserDetailSerializer
 from apps.accounts.models import User, Organization
-from rest_framework import permissions, generics, viewsets
+from apps.core.api import generics
 
 
-class TokenObtainPairView(TokenViewBase, APIMiddleware):
+class TokenObtainPairView(generics.CustomTokenView):
     """Return JWT tokens (access and refresh) for specific user based on email and password."""
     serializer_class = TokenObtainPairSerializer
     tags = ["Auth API"]
@@ -18,7 +16,7 @@ class TokenObtainPairView(TokenViewBase, APIMiddleware):
         return self.success_response(results=serializer.validated_data)
 
 
-class TokenRefreshView(TokenViewBase, APIMiddleware):
+class TokenRefreshView(generics.CustomTokenView):
     """Renew tokens (access and refresh) with new expire time based on specific user's access token."""
     serializer_class = TokenRefreshSerializer
     tags = ["Auth API"]
@@ -29,7 +27,10 @@ class TokenRefreshView(TokenViewBase, APIMiddleware):
         return self.success_response(results=serializer.validated_data)
 
 
-class RegisterView(generics.CreateAPIView, APIMiddleware):
+class RegisterView(generics.CustomCreateView):
+    """
+    http://127.0.0.1:8000/api/v1/accounts/register/
+    """
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
@@ -42,20 +43,46 @@ class RegisterView(generics.CreateAPIView, APIMiddleware):
         return self.success_response(results=serializer.validated_data)
 
 
-class UserUpdateDestroyView(generics.CreateAPIView, APIMiddleware):
+class UserDetailView(generics.CustomUpdateDestroyView):
+    """
+    http://127.0.0.1:8000/api/v1/accounts/user/{id}/
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserUpdateDestroySerializer
     queryset = User.objects.all()
-    permission_classes = (AllowAny,)
-    serializer_class = RegisterSerializer
     tags = ["User API"]
+    lookup_field = "id"
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return self.success_response(results=serializer.validated_data)
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = UserDetailSerializer(instance)
+        return self.success_response(results=serializer.data)
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.kwargs['id'])
 
 
-class OrganizationViewSet(APIMiddleware, viewsets.ViewSet):
+class UserListView(generics.CustomListView):
+    """
+    http://127.0.0.1:8000/api/v1/accounts/user/all/
+    """
+    tags = ["User API"]
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserDetailSerializer
+    queryset = User.objects.all()
+
+
+class OrganizationListView(generics.CustomListView):
+    """
+    http://127.0.0.1:8000/api/v1/accounts/organization/all/
+    """
+    tags = ["Organization API"]
+    permission_classes = (IsAuthenticated,)
+    serializer_class = OrganizationSerializer
+    queryset = Organization.objects.all()
+
+
+class OrganizationViewSet(generics.APILayer, generics.viewsets.ViewSet):
     """
     http://127.0.0.1:8000/api/v1/accounts/organization/
     """

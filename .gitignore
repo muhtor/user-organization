@@ -334,7 +334,7 @@ vacancy/media/
 
 
 .ipython/
-.env
+#.env
 .envs/*
 !.envs/env.example
 .temp/
