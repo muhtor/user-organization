@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.urls import reverse_lazy
 
-from .models import User
+from .models import User, Organization
 
 admin.site.unregister(Group)
 
@@ -51,8 +51,19 @@ class UserChangeForm(forms.ModelForm):
 
 
 @admin.register(User)
-class AdminView(BaseUserAdmin):
-
+class UserAdminView(BaseUserAdmin):
+    """
+    email
+    first_name
+    last_name
+    phone
+    organizations
+    avatar
+    activated_date
+    is_active
+    is_staff
+    is_superuser
+    """
     form = UserChangeForm
     add_form = UserCreationForm
     filter_horizontal = ()
@@ -65,6 +76,8 @@ class AdminView(BaseUserAdmin):
             'fields': (
                 'email',
                 'phone',
+                'organizations',
+                'avatar',
                 'activated_date',
                 'is_active',
                 'is_staff',
@@ -81,6 +94,8 @@ class AdminView(BaseUserAdmin):
             'fields': (
                 'email',
                 'phone',
+                'organizations',
+                'avatar',
                 'activated_date',
                 'is_active',
                 'is_staff',
@@ -96,3 +111,9 @@ class AdminView(BaseUserAdmin):
     list_display_links = ('id', 'email', 'phone')
     ordering = ('-id',)
 
+
+@admin.register(Organization)
+class OrganizationAdminView(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    list_filter = ('created_at', )
+    search_fields = ('name', )
