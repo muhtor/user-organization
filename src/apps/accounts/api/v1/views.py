@@ -1,4 +1,5 @@
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from .serializers import RegisterSerializer, OrganizationSerializer, UserUpdateDestroySerializer, UserDetailSerializer
 from apps.accounts.models import User, Organization
@@ -40,7 +41,7 @@ class RegisterView(generics.CustomCreateView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return self.success_response(results=serializer.validated_data)
+        return self.success_response(results=serializer.validated_data, status_code=status.HTTP_201_CREATED)
 
 
 class UserDetailView(generics.CustomUpdateDestroyView):
