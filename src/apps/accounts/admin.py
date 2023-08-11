@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.urls import reverse_lazy
 
-from .models import User, UserProfile, Role, CustomPermission, StaffPermission
+from .models import User
 
 admin.site.unregister(Group)
 
@@ -52,22 +52,20 @@ class UserChangeForm(forms.ModelForm):
 
 @admin.register(User)
 class AdminView(BaseUserAdmin):
+
     form = UserChangeForm
     add_form = UserCreationForm
     filter_horizontal = ()
-    list_display = ('id', 'username', 'phone', 'status', 'is_staff', 'is_superuser',)
+    list_display = ('id', 'email', 'phone', 'is_staff', 'is_superuser',)
     list_filter = ('is_staff', 'is_superuser')
-    search_fields = ('id', 'username', 'email', 'phone')
+    search_fields = ('id', 'email', 'phone')
 
     fieldsets = (
         (None, {
             'fields': (
-                'username',
                 'email',
                 'phone',
-                'phone_2',
                 'activated_date',
-                'status',
                 'is_active',
                 'is_staff',
                 'is_superuser',
@@ -81,12 +79,9 @@ class AdminView(BaseUserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': (
-                'username',
                 'email',
                 'phone',
-                'phone_2',
                 'activated_date',
-                'status',
                 'is_active',
                 'is_staff',
                 'is_superuser',
@@ -98,54 +93,6 @@ class AdminView(BaseUserAdmin):
         # ('Permissions', {'fields': ('user_permissions',)}),
     )
 
-    list_display_links = ('id', 'username', 'phone')
+    list_display_links = ('id', 'email', 'phone')
     ordering = ('-id',)
-
-
-@admin.register(UserProfile)
-class AdminView(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'phone',
-        'status'
-    )
-    list_display_links = ('phone', )
-
-
-@admin.register(Role)
-class AdminView(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'description',
-        'creator',
-        'codes',
-        'status'
-    )
-    list_display_links = ('name', )
-
-
-@admin.register(CustomPermission)
-class AdminView(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'title',
-        'permission_code',
-        'parent',
-    )
-    list_display_links = ('title', )
-    search_fields = ['id', 'title', ]
-
-
-@admin.register(StaffPermission)
-class AdminView(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'creator',
-        'user',
-        'role',
-        'status'
-    )
-    list_display_links = ('creator', 'user')
-
 
