@@ -1,5 +1,4 @@
-# Backend User organization development
-This is a Django project which primarily builds APIs using Django REST Framework.
+# Django Backend using DRF
 
 ## Clone project
 
