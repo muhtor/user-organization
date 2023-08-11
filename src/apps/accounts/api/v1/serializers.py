@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import serializers
 from apps.accounts.models import User, Organization
 from rest_framework.validators import UniqueValidator
@@ -51,6 +52,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         user.set_password(validated_data['password'])
+        user.activated_date = datetime.now()
         user.save()
 
         return user
