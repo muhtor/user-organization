@@ -91,6 +91,54 @@ or
 python manage.py test apps accounts
 ```
 
+# DOCKER
+
+first you need to switch docker branch
+
+```
+git checkout docker
+```
+and
+```
+git pull origin docker
+```
+
+### Run with `docker-compose.yml`
+user-organization\src> `docker compose up`
+
+### Commands
+Running migrations with docker-compose (if `run` is used instead of `exec`, then new container is created instead of using the existing one - hence it's better to use `exec`)
+```
+docker-compose exec orgweb python manage.py makemigrations
+docker-compose exec orgweb python manage.py migrate
+docker-compose exec orgweb python manage.py createsuperuser
+docker-compose exec orgweb python manage.py test apps accounts
+```
+if you want to go inside the container
+```
+docker exec -it orgweb bash
+```
+and you can easily run manage.py
+
+```
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py test apps accounts
+```
+
+### Other commands
+
+Deleting all images and containers (dangerous please use it with caution)
+```
+docker system prune -a --volumes
+```
+
+```
+docker images
+docker container ls
+```
+
 ## Documentations
 
 - [SWAGGER](http://127.0.0.1:8000/swagger/) <br>
