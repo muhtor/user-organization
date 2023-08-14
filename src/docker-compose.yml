@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  orgdb:
+    container_name: orgdb
+    image: postgres
+    environment:
+      POSTGRES_DB: db_org
+      POSTGRES_USER: orguser
+      POSTGRES_PASSWORD: orgpass
+    ports:
+      - "5432:5432"
+
+  orgweb:
+    container_name: orgweb
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000 # --noreload
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - orgdb
+    env_file:
+      - .env

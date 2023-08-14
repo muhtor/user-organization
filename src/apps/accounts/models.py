@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from apps.core.models import TimestampedModel
+from apps.core.services.generators import rename_image
+from PIL import Image
 from .manager import UserManager
 
 
@@ -21,7 +23,7 @@ class User(AbstractBaseUser, TimestampedModel):
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=20)
     organizations = models.ManyToManyField(Organization, blank=True)
-    avatar = models.ImageField(upload_to="images/avatar/", null=True, blank=True)
+    avatar = models.ImageField(upload_to=rename_image, null=True, blank=True)
     activated_date = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -43,4 +45,15 @@ class User(AbstractBaseUser, TimestampedModel):
 
     def has_module_perms(self, app_label):
         return True  # does user have permission to view the app 'app_label'?
+
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+        if self.avatar:
+            img = Image.open(self.avatar.path)
+
+            if img.height > 200 or img.width > 200:
+                output_size = (200, 200)
+                img.thumbnail(output_size)
+                img.save(self.avatar.path)
+
 
